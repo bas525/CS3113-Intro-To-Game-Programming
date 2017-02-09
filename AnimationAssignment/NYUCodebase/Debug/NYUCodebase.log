@@ -1,0 +1,9 @@
+﻿  main.cpp
+c:\users\brand\onedrive\documents\game programming\assignments\animationassignment\nyucodebase\main.cpp(70): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\brand\onedrive\documents\game programming\assignments\animationassignment\nyucodebase\main.cpp(94): warning C4838: conversion from 'double' to 'float' requires a narrowing conversion
+c:\users\brand\onedrive\documents\game programming\assignments\animationassignment\nyucodebase\main.cpp(94): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\brand\onedrive\documents\game programming\assignments\animationassignment\nyucodebase\main.cpp(96): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\brand\onedrive\documents\game programming\assignments\animationassignment\nyucodebase\main.cpp(139): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\brand\onedrive\documents\game programming\assignments\animationassignment\nyucodebase\main.cpp(140): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  NYUCodebase.vcxproj -> C:\Users\brand\OneDrive\Documents\Game Programming\Assignments\AnimationAssignment\Debug\NYUCodebase.exe
+  NYUCodebase.vcxproj -> C:\Users\brand\OneDrive\Documents\Game Programming\Assignments\AnimationAssignment\Debug\NYUCodebase.pdb (Full PDB)
