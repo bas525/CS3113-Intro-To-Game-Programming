@@ -1,0 +1,11 @@
+﻿  main.cpp
+c:\users\brand\desktop\mypong\mypong\nyucodebase\main.cpp(39): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\brand\desktop\mypong\mypong\nyucodebase\main.cpp(43): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\brand\desktop\mypong\mypong\nyucodebase\main.cpp(44): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\brand\desktop\mypong\mypong\nyucodebase\main.cpp(45): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\brand\desktop\mypong\mypong\nyucodebase\main.cpp(47): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\brand\desktop\mypong\mypong\nyucodebase\main.cpp(166): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\brand\desktop\mypong\mypong\nyucodebase\main.cpp(167): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\brand\desktop\mypong\mypong\nyucodebase\main.cpp(173): warning C4305: 'argument': truncation from 'double' to 'float'
+  NYUCodebase.vcxproj -> C:\Users\brand\Desktop\MyPong\MyPong\Debug\NYUCodebase.exe
+  NYUCodebase.vcxproj -> C:\Users\brand\Desktop\MyPong\MyPong\Debug\NYUCodebase.pdb (Full PDB)
