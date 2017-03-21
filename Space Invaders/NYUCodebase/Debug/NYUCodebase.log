@@ -1,0 +1,18 @@
+﻿  main.cpp
+e:\space invaders\nyucodebase\main.cpp(36): warning C4305: 'initializing': truncation from 'double' to 'float'
+e:\space invaders\nyucodebase\main.cpp(169): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+e:\space invaders\nyucodebase\main.cpp(170): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+e:\space invaders\nyucodebase\main.cpp(171): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+e:\space invaders\nyucodebase\main.cpp(172): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+e:\space invaders\nyucodebase\main.cpp(238): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+e:\space invaders\nyucodebase\main.cpp(239): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+e:\space invaders\nyucodebase\main.cpp(267): warning C4018: '<': signed/unsigned mismatch
+e:\space invaders\nyucodebase\main.cpp(309): warning C4305: 'argument': truncation from 'double' to 'float'
+e:\space invaders\nyucodebase\main.cpp(314): warning C4305: 'argument': truncation from 'double' to 'float'
+e:\space invaders\nyucodebase\main.cpp(319): warning C4305: 'argument': truncation from 'double' to 'float'
+e:\space invaders\nyucodebase\main.cpp(324): warning C4305: 'argument': truncation from 'double' to 'float'
+e:\space invaders\nyucodebase\main.cpp(460): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+e:\space invaders\nyucodebase\main.cpp(490): warning C4305: '+=': truncation from 'double' to 'float'
+e:\space invaders\nyucodebase\main.cpp(502): warning C4305: 'argument': truncation from 'double' to 'float'
+  NYUCodebase.vcxproj -> E:\Space Invaders\Debug\NYUCodebase.exe
+  NYUCodebase.vcxproj -> E:\Space Invaders\Debug\NYUCodebase.pdb (Full PDB)
