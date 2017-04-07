@@ -1,0 +1,34 @@
+﻿  main.cpp
+e:\cs3113\collisions\nyucodebase\main.cpp(24): warning C4305: 'initializing': truncation from 'double' to 'float'
+e:\cs3113\collisions\nyucodebase\main.cpp(27): warning C4305: 'initializing': truncation from 'double' to 'float'
+e:\cs3113\collisions\nyucodebase\main.cpp(28): warning C4305: 'initializing': truncation from 'double' to 'float'
+e:\cs3113\collisions\nyucodebase\main.cpp(58): warning C4018: '<': signed/unsigned mismatch
+e:\cs3113\collisions\nyucodebase\main.cpp(61): warning C4018: '<': signed/unsigned mismatch
+e:\cs3113\collisions\nyucodebase\main.cpp(75): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+e:\cs3113\collisions\nyucodebase\main.cpp(76): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+e:\cs3113\collisions\nyucodebase\main.cpp(78): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+e:\cs3113\collisions\nyucodebase\main.cpp(104): warning C4018: '<': signed/unsigned mismatch
+e:\cs3113\collisions\nyucodebase\main.cpp(122): warning C4018: '<': signed/unsigned mismatch
+e:\cs3113\collisions\nyucodebase\main.cpp(146): warning C4018: '<': signed/unsigned mismatch
+e:\cs3113\collisions\nyucodebase\main.cpp(154): warning C4018: '<': signed/unsigned mismatch
+e:\cs3113\collisions\nyucodebase\main.cpp(248): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+e:\cs3113\collisions\nyucodebase\main.cpp(249): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+e:\cs3113\collisions\nyucodebase\main.cpp(251): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+e:\cs3113\collisions\nyucodebase\main.cpp(252): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+e:\cs3113\collisions\nyucodebase\main.cpp(254): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+e:\cs3113\collisions\nyucodebase\main.cpp(255): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+e:\cs3113\collisions\nyucodebase\main.cpp(257): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+e:\cs3113\collisions\nyucodebase\main.cpp(258): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+e:\cs3113\collisions\nyucodebase\main.cpp(277): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+e:\cs3113\collisions\nyucodebase\main.cpp(278): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+e:\cs3113\collisions\nyucodebase\main.cpp(284): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+e:\cs3113\collisions\nyucodebase\main.cpp(285): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+e:\cs3113\collisions\nyucodebase\main.cpp(276): warning C4101: 'p4x': unreferenced local variable
+e:\cs3113\collisions\nyucodebase\main.cpp(276): warning C4101: 'p4y': unreferenced local variable
+e:\cs3113\collisions\nyucodebase\main.cpp(276): warning C4101: 'p3x': unreferenced local variable
+e:\cs3113\collisions\nyucodebase\main.cpp(276): warning C4101: 'p2y': unreferenced local variable
+e:\cs3113\collisions\nyucodebase\main.cpp(276): warning C4101: 'p2x': unreferenced local variable
+e:\cs3113\collisions\nyucodebase\main.cpp(276): warning C4101: 'p3y': unreferenced local variable
+e:\cs3113\collisions\nyucodebase\main.cpp(378): warning C4305: 'argument': truncation from 'double' to 'float'
+  NYUCodebase.vcxproj -> E:\CS3113\Collisions\Debug\NYUCodebase.exe
+  NYUCodebase.vcxproj -> E:\CS3113\Collisions\Debug\NYUCodebase.pdb (Full PDB)
