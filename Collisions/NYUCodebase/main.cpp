@@ -1,7 +1,7 @@
 
 
 #ifdef _WINDOWS
-	#include <GL/glew.h>
+#include <GL/glew.h>
 #endif
 #include <SDL.h>
 #include <SDL_opengl.h>
@@ -16,17 +16,17 @@
 #include "Vect.h"
 
 #ifdef _WINDOWS
-	#define RESOURCE_FOLDER ""
+#define RESOURCE_FOLDER ""
 #else
-	#define RESOURCE_FOLDER "NYUCodebase.app/Contents/Resources/"
+#define RESOURCE_FOLDER "NYUCodebase.app/Contents/Resources/"
 #endif
 SDL_Window* displayWindow;
 
 float pi = 3.1415926;
 
 float redX = 0, redY = -1, redW = 1.5, redH = 1, redS = .5, redR = 45, redSp = 1,
-	blueX = -2, blueY = 1, blueW = 3, blueH = .5, blueS = .3, blueR = -30, blueSp = 1,
-	whiteX = 2, whiteY = 1, whiteW = 2, whiteH = .7, whiteS = .7, whiteR = 30, whiteSp = 1;
+blueX = -2, blueY = 1, blueW = 3, blueH = .5, blueS = .3, blueR = -30, blueSp = 1,
+whiteX = 2, whiteY = 1, whiteW = 2, whiteH = .7, whiteS = .7, whiteR = 30, whiteSp = 1;
 
 
 bool testSATSeparationForEdge(float edgeX, float edgeY, const std::vector<Vect> &points1, const std::vector<Vect> &points2, Vect &penetration) {
@@ -123,7 +123,7 @@ bool checkSATCollision(const std::vector<Vect> &e1Points, const std::vector<Vect
 		penetrations.push_back(penetration);
 	}
 
-	std::sort(penetrations.begin(), penetrations.end(),penetrationSort);
+	std::sort(penetrations.begin(), penetrations.end(), penetrationSort);
 	penetration = penetrations[0];
 
 	Vect e1Center;
@@ -141,7 +141,7 @@ bool checkSATCollision(const std::vector<Vect> &e1Points, const std::vector<Vect
 	}
 	e2Center.x /= (float)e2Points.size();
 	e2Center.y /= (float)e2Points.size();
-	
+
 	Vect ba;
 	ba.x = e1Center.x - e2Center.x;
 	ba.y = e1Center.y - e2Center.y;
@@ -164,7 +164,10 @@ public:
 
 	GLuint texture;
 
-	Entity() {}
+	Entity() {
+		rotation = 0;
+		speed = 1;
+	}
 
 	Entity(float xp, float yp, float widthp, float heightp, float sizep, float rotationp, float speedp, GLuint texturep) {
 		position = Vect(xp, yp, 0);
@@ -213,7 +216,7 @@ public:
 	void updateMatrix() {
 		matrix.identity();
 		matrix.Translate(position.x, position.y, 0);
-		matrix.Rotate(rotation*pi/180);
+		matrix.Rotate(rotation*pi / 180);
 		matrix.Scale(scale.x, scale.y, 0);
 	}
 
@@ -258,8 +261,8 @@ public:
 	//Changes position of the entity
 	//Used for testing collision
 	void collisionMove(Vect p) {
-		position.x += p.x/2;
-		position.y += p.y/2;
+		position.x += p.x / 2;
+		position.y += p.y / 2;
 	}
 
 };
@@ -268,7 +271,7 @@ public:
 GLuint LoadTexture(const char *filePath) {
 	int w, h, comp;
 	unsigned char* image = stbi_load(filePath, &w, &h, &comp, STBI_rgb_alpha);
-	
+
 	if (image == NULL) {
 		std::cout << "Unable to load image. Make sure the path is correct\n";
 		assert(false);
@@ -305,9 +308,9 @@ void Draw(Entity &red, Entity &blue, Entity &white, ShaderProgram &program, Matr
 
 void Input(Entity &player, float elapsed) {
 	const Uint8 *keys = SDL_GetKeyboardState(NULL);
-	float x=0, y=0;
-	if (keys[SDL_SCANCODE_LEFT]) {x = -1;}
-	else if (keys[SDL_SCANCODE_RIGHT]) { x = 1;}
+	float x = 0, y = 0;
+	if (keys[SDL_SCANCODE_LEFT]) { x = -1; }
+	else if (keys[SDL_SCANCODE_RIGHT]) { x = 1; }
 	if (keys[SDL_SCANCODE_UP]) { y = 1; }
 	else if (keys[SDL_SCANCODE_DOWN]) { y = -1; }
 
@@ -319,7 +322,7 @@ void Update(Entity &red, Entity &blue, Entity& white, GLuint texture) {
 	red.Update();
 	blue.Update();
 	white.Update();
-	if (checkSATCollision(blue.globPoints(), red.globPoints(), penetration)) {
+	if (checkSATCollision(red.globPoints(), blue.globPoints(), penetration)) {
 		red.collisionMove(penetration);
 		Vect opp;
 		opp.x = -penetration.x;
@@ -340,12 +343,12 @@ int main(int argc, char *argv[]) {
 	displayWindow = SDL_CreateWindow("Collisions", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 360, SDL_WINDOW_OPENGL);
 	SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
 	SDL_GL_MakeCurrent(displayWindow, context);
-	#ifdef _WINDOWS
-		glewInit();
-	#endif
+#ifdef _WINDOWS
+	glewInit();
+#endif
 
 	glViewport(0, 0, 640, 360);
-	
+
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -380,7 +383,7 @@ int main(int argc, char *argv[]) {
 		float ticks = (float)SDL_GetTicks() / 1000.0f;
 		float elapsed = ticks - lastFrameTicks;
 		lastFrameTicks = ticks;
-		
+
 		program.setProjectionMatrix(projectionMatrix);
 		program.setViewMatrix(viewMatrix);
 		program.setModelMatrix(modelMatrix);

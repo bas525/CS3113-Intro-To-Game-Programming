@@ -2,7 +2,11 @@
 #include <math.h>
 //cpp file for Vector class
 
-Vect::Vect(){}
+Vect::Vect(){
+	x = 0;
+	y = 0;
+	z = 0;
+}
 
 
 Vect::Vect(float xp, float yp, float zp) {

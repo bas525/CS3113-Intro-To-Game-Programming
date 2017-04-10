@@ -1,16 +1,4 @@
-﻿  main.cpp
-c:\users\brand\desktop\new folder\new folder\cs3113\collisions\nyucodebase\main.cpp(25): warning C4305: 'initializing': truncation from 'double' to 'float'
-c:\users\brand\desktop\new folder\new folder\cs3113\collisions\nyucodebase\main.cpp(28): warning C4305: 'initializing': truncation from 'double' to 'float'
-c:\users\brand\desktop\new folder\new folder\cs3113\collisions\nyucodebase\main.cpp(29): warning C4305: 'initializing': truncation from 'double' to 'float'
-c:\users\brand\desktop\new folder\new folder\cs3113\collisions\nyucodebase\main.cpp(42): warning C4018: '<': signed/unsigned mismatch
-c:\users\brand\desktop\new folder\new folder\cs3113\collisions\nyucodebase\main.cpp(45): warning C4018: '<': signed/unsigned mismatch
-c:\users\brand\desktop\new folder\new folder\cs3113\collisions\nyucodebase\main.cpp(59): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\brand\desktop\new folder\new folder\cs3113\collisions\nyucodebase\main.cpp(60): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\brand\desktop\new folder\new folder\cs3113\collisions\nyucodebase\main.cpp(62): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\brand\desktop\new folder\new folder\cs3113\collisions\nyucodebase\main.cpp(88): warning C4018: '<': signed/unsigned mismatch
-c:\users\brand\desktop\new folder\new folder\cs3113\collisions\nyucodebase\main.cpp(106): warning C4018: '<': signed/unsigned mismatch
-c:\users\brand\desktop\new folder\new folder\cs3113\collisions\nyucodebase\main.cpp(130): warning C4018: '<': signed/unsigned mismatch
-c:\users\brand\desktop\new folder\new folder\cs3113\collisions\nyucodebase\main.cpp(138): warning C4018: '<': signed/unsigned mismatch
-c:\users\brand\desktop\new folder\new folder\cs3113\collisions\nyucodebase\main.cpp(358): warning C4305: 'argument': truncation from 'double' to 'float'
-  NYUCodebase.vcxproj -> C:\Users\brand\Desktop\New folder\New folder\CS3113\Collisions\Debug\NYUCodebase.exe
-  NYUCodebase.vcxproj -> C:\Users\brand\Desktop\New folder\New folder\CS3113\Collisions\Debug\NYUCodebase.pdb (Full PDB)
+﻿  Vect.cpp
+c:\users\brand\desktop\test\collisions\nyucodebase\vect.cpp(19): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  NYUCodebase.vcxproj -> C:\Users\brand\Desktop\test\Collisions\Debug\NYUCodebase.exe
+  NYUCodebase.vcxproj -> C:\Users\brand\Desktop\test\Collisions\Debug\NYUCodebase.pdb (Full PDB)
