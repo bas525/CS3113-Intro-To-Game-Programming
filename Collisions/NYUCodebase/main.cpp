@@ -232,11 +232,11 @@ public:
 	//returns the relative corners of this object
 	std::vector<Vect> relPoints() {
 		std::vector<Vect> points;
-		points.push_back(Vect(-.5, -.5, 0));
+		//points.push_back(Vect(-.5, -.5, 0));
 		points.push_back(Vect(-.5, .5, 0));
 		points.push_back(Vect(.5, .5, 0));
 		points.push_back(Vect(.5, -.5, 0));
-		//points.push_back(Vect(-.5, -.5, 0));
+		points.push_back(Vect(-.5, -.5, 0));
 		return points;
 	}
 
