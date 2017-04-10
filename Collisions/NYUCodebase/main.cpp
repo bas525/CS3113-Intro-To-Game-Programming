@@ -13,6 +13,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "ShaderProgram.h"
+#include "Vect.h"
 
 #ifdef _WINDOWS
 	#define RESOURCE_FOLDER ""
@@ -23,29 +24,12 @@ SDL_Window* displayWindow;
 
 float pi = 3.1415926;
 
-float redX = 0, redY = -1, redW = 1, redH = 1, redS = .5, redR = 45, redSp = 2,
-	blueX = -2, blueY = 1, blueW = 3, blueH = .5, blueS = .3, blueR = 45, blueSp = 1,
-	whiteX = 2, whiteY = 1, whiteW = 2, whiteH = .7, whiteS = .7, whiteR = 0, whiteSp = 1;
+float redX = 0, redY = -1, redW = 1.5, redH = 1, redS = .5, redR = 45, redSp = 1,
+	blueX = -2, blueY = 1, blueW = 3, blueH = .5, blueS = .3, blueR = -30, blueSp = 1,
+	whiteX = 2, whiteY = 1, whiteW = 2, whiteH = .7, whiteS = .7, whiteR = 30, whiteSp = 1;
 
 
-class Vector {
-public:
-	float x;
-	float y;
-
-	Vector() {}
-
-	Vector(float xp, float yp) {
-		x = xp;
-		y = yp;
-	}
-
-	float length() const {
-		return sqrt(x*x + y*y);
-	}
-};
-
-bool testSATSeparationForEdge(float edgeX, float edgeY, const std::vector<Vector> &points1, const std::vector<Vector> &points2, Vector &penetration) {
+bool testSATSeparationForEdge(float edgeX, float edgeY, const std::vector<Vect> &points1, const std::vector<Vect> &points2, Vect &penetration) {
 	float normalX = -edgeY;
 	float normalY = edgeX;
 	float len = sqrtf(normalX*normalX + normalY*normalY);
@@ -95,12 +79,12 @@ bool testSATSeparationForEdge(float edgeX, float edgeY, const std::vector<Vector
 	return true;
 }
 
-bool penetrationSort(const Vector &p1, const Vector &p2) {
+bool penetrationSort(const Vect &p1, const Vect &p2) {
 	return p1.length() < p2.length();
 }
 
-bool checkSATCollision(const std::vector<Vector> &e1Points, const std::vector<Vector> &e2Points, Vector &penetration) {
-	std::vector<Vector> penetrations;
+bool checkSATCollision(const std::vector<Vect> &e1Points, const std::vector<Vect> &e2Points, Vect &penetration) {
+	std::vector<Vect> penetrations;
 	for (int i = 0; i < e1Points.size(); i++) {
 		float edgeX, edgeY;
 
@@ -112,7 +96,7 @@ bool checkSATCollision(const std::vector<Vector> &e1Points, const std::vector<Ve
 			edgeX = e1Points[i + 1].x - e1Points[i].x;
 			edgeY = e1Points[i + 1].y - e1Points[i].y;
 		}
-		Vector penetration;
+		Vect penetration;
 		bool result = testSATSeparationForEdge(edgeX, edgeY, e1Points, e2Points, penetration);
 		if (!result) {
 			return false;
@@ -130,7 +114,7 @@ bool checkSATCollision(const std::vector<Vector> &e1Points, const std::vector<Ve
 			edgeX = e2Points[i + 1].x - e2Points[i].x;
 			edgeY = e2Points[i + 1].y - e2Points[i].y;
 		}
-		Vector penetration;
+		Vect penetration;
 		bool result = testSATSeparationForEdge(edgeX, edgeY, e1Points, e2Points, penetration);
 
 		if (!result) {
@@ -139,10 +123,10 @@ bool checkSATCollision(const std::vector<Vector> &e1Points, const std::vector<Ve
 		penetrations.push_back(penetration);
 	}
 
-	std::sort(penetrations.begin(), penetrations.end(), penetrationSort);
+	std::sort(penetrations.begin(), penetrations.end(),penetrationSort);
 	penetration = penetrations[0];
 
-	Vector e1Center;
+	Vect e1Center;
 	for (int i = 0; i < e1Points.size(); i++) {
 		e1Center.x += e1Points[i].x;
 		e1Center.y += e1Points[i].y;
@@ -150,15 +134,15 @@ bool checkSATCollision(const std::vector<Vector> &e1Points, const std::vector<Ve
 	e1Center.x /= (float)e1Points.size();
 	e1Center.y /= (float)e1Points.size();
 
-	Vector e2Center;
+	Vect e2Center;
 	for (int i = 0; i < e2Points.size(); i++) {
 		e2Center.x += e2Points[i].x;
 		e2Center.y += e2Points[i].y;
 	}
 	e2Center.x /= (float)e2Points.size();
 	e2Center.y /= (float)e2Points.size();
-
-	Vector ba;
+	
+	Vect ba;
 	ba.x = e1Center.x - e2Center.x;
 	ba.y = e1Center.y - e2Center.y;
 
@@ -166,54 +150,47 @@ bool checkSATCollision(const std::vector<Vector> &e1Points, const std::vector<Ve
 		penetration.x *= -1.0f;
 		penetration.y *= -1.0f;
 	}
-
 	return true;
 }
 
+
 class Entity {
 public:
-	float x;
-	float y;
-
-	float width;
-	float height;
-	float size;
+	Matrix matrix;
+	Vect position;
+	Vect scale;
 	float rotation;
-
 	float speed;
-
-	//stay stuff strictly for testing
-	bool stayx;
-	bool stayy;
 
 	GLuint texture;
 
 	Entity() {}
 
 	Entity(float xp, float yp, float widthp, float heightp, float sizep, float rotationp, float speedp, GLuint texturep) {
-		x = xp;
-		y = yp;
-
-		width = widthp;
-		height = heightp;
-		size = sizep;
+		position = Vect(xp, yp, 0);
+		scale = Vect(widthp*sizep, heightp*sizep, 0);
 		rotation = rotationp;
-
 		speed = speedp;
-		//stay stuff strictly for testing
-		stayx = false;
-		stayy = false;
 		texture = texturep;
+		updateMatrix();
 	}
 
+	//Draws the Entity with the given transformations
 	void Draw(ShaderProgram &program, Matrix &modelMatrix) {
-		modelMatrix.identity();
-		modelMatrix.Translate(x, y, 0);
-		//if(rotation != -30) modelMatrix.Rotate(rotation*pi / 180);
-		modelMatrix.Rotate(rotation*pi / 180);
-		modelMatrix.Scale(width*size, height*size, 0);
-		
-		program.setModelMatrix(modelMatrix);
+		//modelMatrix.identity();
+		//modelMatrix.Translate(x, y, 0);
+		////if(rotation != -30) modelMatrix.Rotate(rotation*pi / 180);
+		//modelMatrix.Rotate(rotation*pi / 180);
+		//modelMatrix.Scale(width*size, height*size, 0);
+		//
+		updateMatrix();
+
+
+		//modelMatrix = matrix * modelMatrix;
+
+		//program.setModelMatrix(modelMatrix);
+		program.setModelMatrix(matrix);
+
 		glBindTexture(GL_TEXTURE_2D, texture);
 
 		float vertices[] = { -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5 };
@@ -232,64 +209,58 @@ public:
 		glDisableVertexAttribArray(program.texCoordAttribute);
 	}
 
-	void Update(float moveX, float moveY, float elapsed) {
-		if (stayx && moveX == -1)	x = x;
-		else x += moveX * speed * elapsed;
-		if (stayy && moveY == 1) y = y;
-		else y += moveY * speed * elapsed;
-
+	//Updates matrix variable with the latest transformations
+	void updateMatrix() {
+		matrix.identity();
+		matrix.Translate(position.x, position.y, 0);
+		matrix.Rotate(rotation*pi/180);
+		matrix.Scale(scale.x, scale.y, 0);
 	}
 
-	std::vector<Vector>  Points() {
-		std::vector<Vector> points;
-		float p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y;
-		//locations are relative to the entity plane
-		//top left
-		p1x = x - .5*size*width*(cos(rotation*pi / 180.0f) + sin(rotation*pi / 180.0f));
-		p1y = y + .5*size*height*(-sin(rotation*pi / 180.0f) + cos(rotation*pi / 180.0f));
-		//top right
-		p2x = x - .5*size*width*(-cos(rotation*pi / 180.0f) + sin(rotation*pi / 180.0f));
-		p2y = y + .5*size*height*(sin(rotation*pi / 180.0f) + cos(rotation*pi / 180.0f));
-		//bottom right
-		p3x = x - .5*size*width*(-cos(rotation*pi / 180.0f) - sin(rotation*pi / 180.0f));
-		p3y = y + .5*size*height*(sin(rotation*pi / 180.0f) - cos(rotation*pi / 180.0f));
-		//bottom left
-		p4x = x - .5*size*width*(cos(rotation*pi / 180.0f) - sin(rotation*pi / 180.0f));
-		p4y = y + .5*size*height*(-sin(rotation*pi / 180.0f) - cos(rotation*pi / 180.0f));
+	//Updates input for the object to be moved
+	void Input(float moveX, float moveY, float elapsed) {
+		position.x += moveX * speed * elapsed;
+		position.y += moveY * speed * elapsed;
+		updateMatrix();
+	}
 
+	//update function called each time run
+	void Update() {
+		updateMatrix();
+	}
 
-		points.push_back(Vector(p1x, p1y));
-		points.push_back(Vector(p2x, p2y));
-		points.push_back(Vector(p3x, p3y));
-		points.push_back(Vector(p4x, p4y));
-
+	//returns the relative corners of this object
+	std::vector<Vect> relPoints() {
+		std::vector<Vect> points;
+		points.push_back(Vect(-.5, -.5, 0));
+		points.push_back(Vect(-.5, .5, 0));
+		points.push_back(Vect(.5, .5, 0));
+		points.push_back(Vect(.5, -.5, 0));
+		//points.push_back(Vect(-.5, -.5, 0));
 		return points;
 	}
+
+	//returns the global corners of this object
+	std::vector<Vect> globPoints() {
+		std::vector<Vect> points = relPoints();
+		for (Vect& v : points) {
+			v = matrix * v;
+		}
+		return points;
+	}
+
+	//Changes texture of the entity
+	//Used for testing collision
 	void collisionAction(GLuint color) {
 		texture = color;
 	}
-	void collisionMove(Vector p) {
-		
+
+	//Changes position of the entity
+	//Used for testing collision
+	void collisionMove(Vect p) {
+		position.x += p.x/2;
+		position.y += p.y/2;
 	}
-	//below is strictly for personal testing
-	void test(Entity& blue, GLuint original) {
-		float p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y;
-		p1x = x - .5*size*width*(cos(rotation*pi / 180.0f) - sin(rotation*pi / 180.0f));
-		p1y = y + .5*size*height*(-sin(rotation*pi / 180.0f) - cos(rotation*pi / 180.0f));
-		
-		
-		//p1y = y + .5*size*height;
-		//p1x = x + .5*size*width;
-
-		float by = blue.y + .5*blue.size*blue.height;
-		float bx = blue.x + .5*blue.size*blue.width;
-		if (p1y > by) stayy = true;
-		else stayy = false;
-		if (p1x <= bx) stayx = true;
-		else stayx = false;
-	}
-
-
 
 };
 
@@ -339,15 +310,24 @@ void Input(Entity &player, float elapsed) {
 	else if (keys[SDL_SCANCODE_RIGHT]) { x = 1;}
 	if (keys[SDL_SCANCODE_UP]) { y = 1; }
 	else if (keys[SDL_SCANCODE_DOWN]) { y = -1; }
-	player.Update(x, y, elapsed);
+
+	player.Input(x, y, elapsed);
 }
 
 void Update(Entity &red, Entity &blue, Entity& white, GLuint texture) {
-	Vector penetration;
-	if (checkSATCollision(blue.Points(), red.Points(), penetration)) {
-		red.collisionAction(blue.texture);
+	Vect penetration;
+	red.Update();
+	blue.Update();
+	white.Update();
+	if (checkSATCollision(blue.globPoints(), red.globPoints(), penetration)) {
+		red.collisionMove(penetration);
+		Vect opp;
+		opp.x = -penetration.x;
+		opp.y = -penetration.y;
+		blue.collisionMove(opp);
+		//red.collisionAction(blue.texture);
 	}
-	else if (checkSATCollision(red.Points(), white.Points(), penetration)) {
+	else if (checkSATCollision(red.globPoints(), white.globPoints(), penetration)) {
 		red.collisionAction(white.texture);
 	}
 	else {
@@ -407,9 +387,9 @@ int main(int argc, char *argv[]) {
 
 		Draw(red, blue, white, program, modelMatrix);
 		Input(red, elapsed);
-		///Below line was run strictly for testing purposes
-		//red.test(blue, redTexture);
 		Update(red, blue, white, redTexture);
+
+
 		SDL_GL_SwapWindow(displayWindow);
 	}
 

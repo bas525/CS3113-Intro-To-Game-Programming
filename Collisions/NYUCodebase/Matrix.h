@@ -1,5 +1,8 @@
 
 #pragma once
+//I know not inefficient but saves time
+#include "Vect.h"
+
 
 class Matrix {
     public:
@@ -13,6 +16,7 @@ class Matrix {
     
         void identity();
         Matrix operator * (const Matrix &m2) const;
+		Vect operator * (const Vect &v);
         Matrix inverse() const;
     
         void Translate(float x, float y, float z);

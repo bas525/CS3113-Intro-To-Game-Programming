@@ -128,6 +128,22 @@ Matrix Matrix::operator * (const Matrix &m2) const {
     return r;
 }
 
+
+//Operator overload for multiplying a matrix by a vector
+Vect Matrix::operator * (const Vect &v) {
+	Vect r;
+	//r.x = m[0][0] * v.x + m[0][1] * v.y + m[0][2] * v.z + m[0][3];
+	//r.y = m[1][0] * v.x + m[1][1] * v.y + m[1][2] * v.z + m[1][3];
+	//r.z = m[2][0] * v.x + m[2][1] * v.y + m[2][2] * v.z + m[2][3];
+
+	r.x = m[0][0] * v.x + m[1][0] * v.y + m[2][0] * v.z + m[3][0];
+	r.y = m[0][1] * v.x + m[1][1] * v.y + m[2][1] * v.z + m[3][1];
+	r.z = m[0][2] * v.x + m[1][2] * v.y + m[2][2] * v.z + m[3][2];
+
+	return r;
+}
+
+
 void Matrix::setPosition(float x, float y, float z) {
     m[3][0] = x;
     m[3][1] = y;
