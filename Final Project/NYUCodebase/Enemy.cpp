@@ -56,6 +56,10 @@ void Enemy::Update(float x, float y, float elapsed)
 	position.y += y*speed*elapsed;
 }
 
+void Enemy::moveX(float x) {
+	position.x = x;
+}
+
 void Enemy::Die()
 {
 	active = false;
@@ -69,6 +73,18 @@ std::vector<Vect> Enemy::relPoints()
 	points.push_back(Vect(.5*size*aspect, -.5*size, 0));
 	points.push_back(Vect(-.5*size*aspect, -.5*size, 0));
 	return points;
+}
+
+float Enemy::enemyLeft() {
+	return position.x - .5*size*aspect;
+}
+
+float Enemy::enemyRight() {
+	return position.x + .5*size*aspect;
+}
+
+float Enemy::halfWidth() {
+	return .5*size*aspect;
 }
 
 std::vector<Vect> Enemy::globPoints()

@@ -20,6 +20,7 @@ void processPlayer(float x, float y, float elapsed);
 void updatePlayer(float elapsed);
 float playerX();
 void playerLaserFire();
+std::vector<float> laserXPos();
 
 std::vector<std::vector<Vect>> playerLaserCord();
 std::vector<bool> playerLaserActive();
@@ -46,3 +47,10 @@ void playEnemy1Laser();
 void playEnemy1Death();
 
 void scrollBackground(float speed, float elapsed);
+
+void startExplosionHere(float x, float y, float size);
+void turnAllExplosionsOff();
+void drawExplosions();
+void updateExplosions(float elapsed);
+
+void quiteGame();

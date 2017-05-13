@@ -53,6 +53,7 @@ void drawLevelThree(ShaderProgram *program)
 {
 	if (levelThreeCooldown > 0) DrawText("Level 3", .8, -.4, -1, 0);
 	//DrawText("Space Striker", .8, -.4, -2.5, -3);
+	drawExplosions();
 	if(meteors[curMeteor].active) meteors[curMeteor].drawSprite(*program);
 	meteor.drawSprite(*program);
 
@@ -77,6 +78,8 @@ void processLevelThree(float elapsed)
 
 	if (keys[SDL_SCANCODE_C]) { playerLaserFire(); }
 	if (keys[SDL_SCANCODE_X]) { playerSword(); }
+	if (keys[SDL_SCANCODE_Q]) quiteGame();
+
 	processPlayer(x, y, elapsed);
 }
 
@@ -125,6 +128,8 @@ void updateLevelThree(float elapsed)
 		return;
 	}
 	scrollBackground(.2, elapsed);
+	updateExplosions(elapsed);
+
 	float direction = 1;
 	levelThreeTime += elapsed;
 	std::vector<std::vector<Vect>> laserCords = playerLaserCord();
@@ -156,6 +161,7 @@ void updateLevelThree(float elapsed)
 	}
 	if (playerSwordActive() && meteors[curMeteor].active) {
 		if (checkSATCollision(playerSwordCord(), meteors[curMeteor].globPoints(), penetration)) {
+			startExplosionHere(meteors[curMeteor].position.x, meteors[curMeteor].position.y, meteors[curMeteor].size);
 			meteors[curMeteor].active = false;
 			playEnemy3Death();
 		}

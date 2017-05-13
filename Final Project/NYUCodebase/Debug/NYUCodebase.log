@@ -1,6 +1,2 @@
-﻿  WinScreen.cpp
-d:\cs3113\cs3113-intro-to-game-programming\final project\nyucodebase\winscreen.cpp(6): warning C4305: 'argument': truncation from 'double' to 'float'
-d:\cs3113\cs3113-intro-to-game-programming\final project\nyucodebase\winscreen.cpp(7): warning C4305: 'argument': truncation from 'double' to 'float'
-d:\cs3113\cs3113-intro-to-game-programming\final project\nyucodebase\winscreen.cpp(21): warning C4305: 'argument': truncation from 'double' to 'float'
-  NYUCodebase.vcxproj -> D:\CS3113\CS3113-Intro-To-Game-Programming\Final Project\Debug\NYUCodebase.exe
+﻿  NYUCodebase.vcxproj -> D:\CS3113\CS3113-Intro-To-Game-Programming\Final Project\Debug\NYUCodebase.exe
   NYUCodebase.vcxproj -> D:\CS3113\CS3113-Intro-To-Game-Programming\Final Project\Debug\NYUCodebase.pdb (Full PDB)

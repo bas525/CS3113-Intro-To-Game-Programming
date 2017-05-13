@@ -14,6 +14,8 @@ void processGameOverScreen()
 		//setStateCollision();
 		setStateTitleScreen();
 	}
+	if (keys[SDL_SCANCODE_Q]) quiteGame();
+
 }
 
 void updateGameOverScreen()

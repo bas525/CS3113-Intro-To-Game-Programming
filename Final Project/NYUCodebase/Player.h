@@ -56,6 +56,8 @@ public:
 
 	void resetAllLasers();
 
+	std::vector<float> getAllLaserX();
+
 	void resetSword();
 
 	void swordAttack();

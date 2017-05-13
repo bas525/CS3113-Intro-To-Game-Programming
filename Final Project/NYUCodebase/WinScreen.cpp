@@ -14,6 +14,8 @@ void processWinScreen()
 		//setStateCollision();
 		setStateTitleScreen();
 	}
+	if (keys[SDL_SCANCODE_Q]) quiteGame();
+
 }
 
 void updateWinScreen(float elapsed)

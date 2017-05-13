@@ -14,6 +14,7 @@ void drawTitleScreen()
 	DrawText("Use X to use sword", .4, -.2, -1.8, -1.56);
 	DrawText("Use sword when laser doesn't work", .2, -.1, -1.85, -1.82);
 	DrawText("Press R to reset at any time", .2, -.1, -1.85, -2.04);
+	DrawText("Press Q to quiet at any time", .2, -.1, -1.85, -2.3);
 }
 
 void processTitleScreen()
@@ -28,7 +29,7 @@ void processTitleScreen()
 	if (keys[SDL_SCANCODE_2]) setStateLevelTwo();
 	if (keys[SDL_SCANCODE_3]) setStateLevelThree();
 	if (keys[SDL_SCANCODE_4]) setStateWin();
-
+	if (keys[SDL_SCANCODE_Q]) quiteGame();
 }
 
 void updateTitleScreen(float elapsed)

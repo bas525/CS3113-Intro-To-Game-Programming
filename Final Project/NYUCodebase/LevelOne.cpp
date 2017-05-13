@@ -10,12 +10,22 @@ float enemyCountX = 6;
 float enemyCountY = 3;
 float levelOneTime;
 int totalEnemiesAlive;
+bool lastOne;
+bool inLerp;
+float startLerp;
+float toLerp;
+float elapsedLerp;
 void initLevelOne()
 {
 	enemies = *new std::vector<std::vector<Enemy>>;
 	enemyLasers = *new std::vector<EnemyLaser1>;
 	levelOneTime = 0;
 	totalEnemiesAlive = 0;
+	lastOne = false;
+	inLerp = false;
+	toLerp = 0;
+	startLerp = 0;
+	elapsedLerp = 0;
 
 	float enemyRight = 2.9;
 	float enemyLeft = -2.1;
@@ -53,6 +63,7 @@ void drawLevelOne(ShaderProgram *program)
 	/*for (Enemy &enemy : enemies) {
 		enemy.drawSprite(*program);
 	}*/
+	drawExplosions();
 	for (int i = 0; i < enemyCountX; i++) {
 		for (int j = 0; j < enemyCountY; j++) {
 			if (enemies[i][j].active) {
@@ -87,8 +98,21 @@ void processLevelOne(float elapsed)
 
 	if (keys[SDL_SCANCODE_C]) { playerLaserFire(); }
 	if (keys[SDL_SCANCODE_X]) { playerSword(); }
+	if (keys[SDL_SCANCODE_Q]) quiteGame();
 
 	processPlayer(x, y, elapsed);
+}
+
+float lerp(float v0, float v1, float t) {
+	return (1.0 - t)*v0 + t*v1;
+}
+
+float randomNum1(float left, float right) {
+	float random = (float)(rand() % 1000);
+	random = random / 1000;
+	random = random*(right - left);
+	random += left;
+	return random;
 }
 
 void updateLevelOne(float elapsed)
@@ -98,6 +122,8 @@ void updateLevelOne(float elapsed)
 		return;
 	}
 	scrollBackground(.1, elapsed);
+	updateExplosions(elapsed);
+
 	float direction = 1;
 	levelOneTime += elapsed;
 	std::vector<std::vector<Vect>> laserCords = playerLaserCord();
@@ -129,8 +155,10 @@ void updateLevelOne(float elapsed)
 					if (laserActive[k]) {
 						if (checkSATCollision(laserCords[k], enemies[i][j].globPoints(), penetration)) {
 							playerSetLaserOff(k);
+							startExplosionHere(enemies[i][j].position.x, enemies[i][j].position.y, enemies[i][j].size);
 							enemies[i][j].Die();
 							playEnemy1Death();
+
 						}
 					}
 				}
@@ -154,6 +182,41 @@ void updateLevelOne(float elapsed)
 			if (enemies[i][j].active) counter++;
 		}
 	}
+	/*else {
+		for (int i = 0; i < enemyCountX; i++) {
+			for (int j = 0; j < enemyCountY; j++) {
+				if (enemies[i][j].active) {
+					std::vector<float> laserXs = laserXPos();
+					if (!inLerp) {
+						bool findPosition = false;
+						for (float xs : laserXs) {
+							if (enemies[i][j].enemyLeft() < xs && enemies[i][j].enemyRight()) {
+								findPosition = true;
+							}
+						}
+						while (findPosition) {
+							findPosition = false;
+							for (float xs : laserXs) {	
+								toLerp = randomNum1(-3.2, 3.2);
+								startLerp = enemies[i][j].position.x;
+								if (toLerp - enemies[i][j].halfWidth() < xs && xs < toLerp + enemies[i][j].halfWidth()) {
+									findPosition = true;
+								}
+							}
+						}
+					}
+					else {
+						enemies[i][j].moveX(lerp(startLerp, toLerp, elapsedLerp));
+						elapsedLerp += elapsed;
+						if (elapsedLerp > 1) {
+							inLerp = false;
+							elapsedLerp = false;
+						}
+					}
+				}
+			}
+		}
+	}*/
 	if (counter == 0) {
 		setStateLevelTwo();
 	}

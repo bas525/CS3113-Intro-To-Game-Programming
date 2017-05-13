@@ -122,6 +122,7 @@ void Player::setLaserOff(int i)
 {
 	lasers[i].laserReset();
 	lasers[i].turnOff(position);
+	lasers[i].position = position;
 	
 }
 
@@ -135,6 +136,16 @@ void Player::resetAllLasers()
 	for (Laser &laser : lasers) {
 		laser.laserReset();
 	}
+}
+
+std::vector<float> Player::getAllLaserX() {
+	std::vector<float> toReturn;
+	for (Laser &laser : lasers) {
+		if (laser.active) {
+			toReturn.push_back(laser.position.x);
+		}
+	}
+	return toReturn;
 }
 
 void Player::resetSword()

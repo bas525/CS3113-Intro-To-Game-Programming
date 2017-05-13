@@ -38,7 +38,10 @@ float windowWidth = 7.1;
 enum GameState { STATE_TITLE_SCREEN, LEVEL_ONE, LEVEL_TWO, LEVEL_THREE, GAME, GAME_OVER, WIN, COLLISION_ASSIGNMENT };
 GameState state;
 
+bool done;
+
 ShaderProgram *program;
+Matrix *shortcut;
 
 Player *player;
 
@@ -81,6 +84,112 @@ GLuint LoadTexture(const char *filePath) {
 	return retTexture;
 }
 
+class SpriteSheet {
+public:
+	GLuint sheet;
+	int spriteCountX;
+	int spriteCountY;
+	int spriteHeight;
+	int spriteWidth;
+
+	SpriteSheet(GLuint &sheetp, int x, int y, int h, int w) {
+		sheet = sheetp;
+		spriteCountX = x;
+		spriteCountY = y;
+		spriteHeight = h;
+		spriteWidth = w;
+	}
+};
+
+class Explosions {
+public:
+	float x;
+	float y;
+	float size;
+	SpriteSheet *spriteSheet;
+	std::vector<int> spriteIndexes;
+	float animationElapsed = 0.0f;
+	float framesPerSecond;
+	int curIndex;
+	bool active;
+	Matrix matrix;
+
+	Explosions(float xp, float yp, float sizep, SpriteSheet *spriteSheetp) {
+		float x = xp;
+		float y = yp;
+		size = sizep;
+		spriteSheet = spriteSheetp;
+		spriteIndexes = {12, 13, 14, 15, 16, 17};
+		animationElapsed = 0.0f;
+		framesPerSecond = 9.0f;
+		curIndex = 0;
+		active = false;
+	}
+	void DrawSpriteSheetSprite(ShaderProgram *program) {
+		float u = (float)(((int)spriteIndexes[curIndex]) % spriteSheet->spriteCountX) / (float)spriteSheet->spriteCountX;
+		float v = (float)(((int)spriteIndexes[curIndex]) / spriteSheet->spriteCountX) / (float)spriteSheet->spriteCountY;
+		float spriteWidth = 1.0 / (float)spriteSheet->spriteCountX;
+		float spriteHeight = 1.0 / (float)spriteSheet->spriteCountY;
+
+		GLfloat texCoords[] = {
+			u, v + spriteHeight,
+			u + spriteWidth, v,
+			u, v,
+			u + spriteWidth, v,
+			u, v + spriteHeight,
+			u + spriteWidth, v + spriteHeight
+		};
+		float vertices[] = { -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f };
+
+		glBindTexture(GL_TEXTURE_2D, spriteSheet->sheet);
+
+		glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, vertices);
+		glEnableVertexAttribArray(program->positionAttribute);
+		glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords);
+		glEnableVertexAttribArray(program->texCoordAttribute);
+
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		glDisableVertexAttribArray(program->positionAttribute);
+		glDisableVertexAttribArray(program->texCoordAttribute);
+	}
+	void drawSprite(ShaderProgram &program) {
+		matrix.identity();
+		matrix.Translate(x, y, 0);
+		matrix.Scale(size, size, 0);
+		program.setModelMatrix(matrix);
+		DrawSpriteSheetSprite(&program);
+		//sprite->drawSprite(&program);
+	}
+	void updateSprite(float elapsed) {
+		if (!active) return;
+		animationElapsed += elapsed;
+		if (animationElapsed > 1.0 / framesPerSecond) {
+			curIndex++;
+			animationElapsed = 0.0;
+
+			if (curIndex > spriteIndexes.size() - 1) {
+				curIndex = 0;
+				turnOff();
+			}
+		}
+	}
+
+	void turnOn(float xp, float yp, float sizep) {
+		x = xp;
+		y = yp;
+		size = sizep;
+		active = true;
+		curIndex = 0;
+	}
+	void turnOff() {
+		active = false;
+		curIndex = 0;
+	}
+};
+
+std::vector<Explosions> explosionSet;
+
 ShaderProgram * getProgram() {
 	return program;
 }
@@ -114,6 +223,11 @@ void playerLaserFire() {
 		Mix_PlayChannel(-1, playerLaserSound, 0);
 	}
 
+}
+
+std::vector<float> laserXPos()
+{
+	return player->getAllLaserX();
 }
 
 std::vector<std::vector<Vect>> playerLaserCord()
@@ -166,30 +280,36 @@ void setStateCollision() {
 	state = COLLISION_ASSIGNMENT;
 }
 void setStateTitleScreen() {
+	turnAllExplosionsOff();
 	state = STATE_TITLE_SCREEN;
 	TitleScreenInit();
 }
 void setStateLevelOne() {
+	turnAllExplosionsOff();
 	state = LEVEL_ONE;
 	initLevelOne();
 	resetPlayer();
 }
 void setStateLevelTwo()
 {
+	turnAllExplosionsOff();
 	state = LEVEL_TWO;
 	initLevelTwo();
 	resetPlayer();
 }
 void setStateLevelThree()
 {
+	turnAllExplosionsOff();
 	state = LEVEL_THREE;
 	initLevelThree();
 	resetPlayer();
 }
 void setStateWin() {
+	turnAllExplosionsOff();
 	state = WIN;
 }
 void setStateGameOver() {
+	turnAllExplosionsOff();
 	Mix_PlayChannel(-1, playerDeathSound, 0);
 	state = GAME_OVER;
 }
@@ -238,6 +358,44 @@ void scrollBackground(float speed, float elapsed) {
 	backgroundSprite->scroll(speed, elapsed);
 }
 
+void startExplosionHere(float x, float y, float size) {
+	for (Explosions &exp : explosionSet) {
+		if (!exp.active) {
+			exp.turnOn(x, y, size);
+			return;
+		}
+
+	}
+}
+
+void turnAllExplosionsOff() {
+	for (Explosions &exp : explosionSet) {
+		exp.turnOff();
+		exp.active = false;
+		exp.curIndex = 0;
+	}
+}
+
+void drawExplosions() {
+	for (Explosions &exp : explosionSet) {
+		if (exp.active) {
+			exp.drawSprite(*program);
+		}
+	}
+}
+
+void updateExplosions(float elapsed) {
+	for (Explosions &exp : explosionSet) {
+		if (exp.active) {
+			exp.updateSprite(elapsed);
+		}
+	}
+}
+
+void quiteGame() {
+	turnAllExplosionsOff();
+	done = true;
+}
 
 int main(int argc, char *argv[]) {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -277,12 +435,20 @@ int main(int argc, char *argv[]) {
 	//projectionMatrix.setOrthoProjection(-3.55, 3.55, -2.0f, 2.0f, -1.0f, 1.0f);
 	projectionMatrix.setOrthoProjection(-windowWidth / 2, windowWidth / 2, -(windowWidth*gameHeight) / (2 * gameWidth), (windowWidth*gameHeight) / (2 * gameWidth), -1.0f, 1.0f);
 
+	shortcut = &modelMatrix;
+
 	GLuint spriteSheet = LoadTexture("spriteSheet.png");
 	player = new Player(&spriteSheet);
 
 	GLuint backgroundSheet = LoadTexture("background.png");
 	backgroundSprite = new SheetSprite(&backgroundSheet, 0.0f/ 1024.0f, 0.0f/1024.0f, 600.0f/ 1024.0f, 800.0f/ 1024.0f, 10.0f);
 
+	GLuint explosionTextures = LoadTexture(RESOURCE_FOLDER"explosion.png");
+	SpriteSheet explosionSheet(explosionTextures, 18, 1, 32, 32);
+
+	for (int i = 0; i < 10; i++) {
+		explosionSet.push_back(Explosions(0, 0, 0, &explosionSheet));
+	}
 
 	SetupGame();
 
@@ -292,7 +458,7 @@ int main(int argc, char *argv[]) {
 	glUseProgram(program->programID);
 
 	SDL_Event event;
-	bool done = false;
+	done = false;
 	while (!done) {
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
@@ -306,11 +472,15 @@ int main(int argc, char *argv[]) {
 		float elapsed = ticks - lastFrameTicks;
 		lastFrameTicks = ticks;
 
+		shortcut = &modelMatrix;
+
 		program->setProjectionMatrix(projectionMatrix);
 		program->setViewMatrix(viewMatrix);
 		program->setModelMatrix(modelMatrix);
 
 		drawBackground(program);
+
+
 		switch (state) {
 		case STATE_TITLE_SCREEN:
 			drawTitleScreen();
@@ -345,10 +515,14 @@ int main(int argc, char *argv[]) {
 		}
 		SDL_GL_SwapWindow(displayWindow);
 	}
+	std::cout << "Quiting" << endl;
 	Mix_FreeMusic(music);
 	Mix_FreeChunk(laserSound);
 	Mix_FreeChunk(playerDieSound);
 	Mix_FreeChunk(enemyDieSound);
+	std::cout << "Quiting" << endl;
+	return 0;
 	SDL_Quit();
+	std::cout << "Quiting" << endl;
 	return 0;
 }

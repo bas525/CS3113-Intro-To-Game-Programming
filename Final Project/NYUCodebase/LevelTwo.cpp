@@ -51,6 +51,8 @@ void drawLevelTwo(ShaderProgram *program)
 	/*for (Enemy2 &enemy : enemies2) {
 	enemy.drawSprite(*program);
 	}*/
+	drawExplosions();
+
 	for (int i = 0; i < enemyCountX2; i++) {
 		for (int j = 0; j < enemyCountY2; j++) {
 			if (enemies2[i][j].active) {
@@ -85,6 +87,8 @@ void processLevelTwo(float elapsed)
 
 	if (keys[SDL_SCANCODE_C]) { playerLaserFire(); }
 	if (keys[SDL_SCANCODE_X]) { playerSword(); }
+	if (keys[SDL_SCANCODE_Q]) quiteGame();
+
 	processPlayer(x, y, elapsed);
 }
 
@@ -95,6 +99,8 @@ void updateLevelTwo(float elapsed)
 		return;
 	}
 	scrollBackground(.15, elapsed);
+	updateExplosions(elapsed);
+
 	float direction = 1;
 	levelTwoTime += elapsed;
 	std::vector<std::vector<Vect>> laserCords = playerLaserCord();
@@ -141,8 +147,11 @@ void updateLevelTwo(float elapsed)
 					if (enemyLaser.active && enemyLaser.hurtUser) {
 						Vect penetration;
 						if (checkSATCollision(enemies2[i][j].globPoints(), enemyLaser.globPoints(), penetration)) {
+							startExplosionHere(enemies2[i][j].position.x, enemies2[i][j].position.y, enemies2[i][j].size);
 							enemies2[i][j].Die();
 							enemyLaser.damagedSelf();
+							enemyLaser.hurtUser = false;
+							enemyLaser.direction = -1;
 							playEnemy2Death();
 						}
 					}

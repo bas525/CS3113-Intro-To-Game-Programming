@@ -38,9 +38,17 @@ public:
 
 	void Update(float x, float y, float elapsed);
 
+	void moveX(float x);
+
 	void Die();
 
 	std::vector<Vect> relPoints();
+
+	float enemyLeft();
+
+	float enemyRight();
+
+	float halfWidth();
 
 	std::vector<Vect> globPoints();
 
