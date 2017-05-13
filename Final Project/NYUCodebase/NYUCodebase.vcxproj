@@ -74,16 +74,56 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Enemy2.cpp" />
+    <ClCompile Include="Enemy3.cpp" />
+    <ClCompile Include="EnemyLaser1.cpp" />
+    <ClCompile Include="EnemyLaser2.cpp" />
+    <ClCompile Include="Entity1.cpp" />
+    <ClCompile Include="GameOverScreen.cpp" />
+    <ClCompile Include="Laser.cpp" />
+    <ClCompile Include="LaserSword.cpp" />
+    <ClCompile Include="LevelOne.cpp" />
+    <ClCompile Include="LevelThree.cpp" />
+    <ClCompile Include="LevelTwo.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="SheetSprite.cpp" />
+    <ClCompile Include="SpriteManager.cpp" />
+    <ClCompile Include="Sword.cpp" />
+    <ClCompile Include="TextDrawer.cpp" />
+    <ClCompile Include="TitleScreen.cpp" />
     <ClCompile Include="Vect.cpp" />
+    <ClCompile Include="waste.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Collision.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Enemy2.h" />
+    <ClInclude Include="Enemy3.h" />
+    <ClInclude Include="EnemyLaser1.h" />
+    <ClInclude Include="EnemyLaser2.h" />
+    <ClInclude Include="Entity1.h" />
+    <ClInclude Include="GameOverScreen.h" />
+    <ClInclude Include="Laser.h" />
+    <ClInclude Include="LaserSword.h" />
+    <ClInclude Include="LevelOne.h" />
+    <ClInclude Include="LevelThree.h" />
+    <ClInclude Include="LevelTwo.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Matrix.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="SheetSprite.h" />
+    <ClInclude Include="SpriteManager.h" />
+    <ClInclude Include="Sword.h" />
+    <ClInclude Include="TextDrawer.h" />
+    <ClInclude Include="TitleScreen.h" />
     <ClInclude Include="Vect.h" />
+    <ClInclude Include="waste.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment.glsl" />
