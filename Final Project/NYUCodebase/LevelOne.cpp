@@ -175,6 +175,22 @@ void updateLevelOne(float elapsed)
 			}
 		}
 	}
+	if (playerSwordActive()) {
+
+		for (int i = 0; i < enemyCountX; i++) {
+			for (int j = 0; j < enemyCountY; j++) {
+				if (enemies[i][j].active) {
+					Vect penetration;
+					if (checkSATCollision(playerSwordCord(), enemies[i][j].globPoints(), penetration)) {
+						startExplosionHere(enemies[i][j].position.x, enemies[i][j].position.y, enemies[i][j].size);
+						enemies[i][j].Die();
+						playEnemy1Death();
+					}
+				}
+			}
+		}
+	}
+
 	updatePlayer(elapsed);
 	int counter = 0;
 	for (int i = 0; i < enemyCountX; i++) {

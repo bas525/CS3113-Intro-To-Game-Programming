@@ -521,6 +521,7 @@ int main(int argc, char *argv[]) {
 	Mix_FreeChunk(playerDieSound);
 	Mix_FreeChunk(enemyDieSound);
 	std::cout << "Quiting" << endl;
+	//Doing this return before SDL_Quit() because SDL_Quit() just freezes and doesn't close
 	return 0;
 	SDL_Quit();
 	std::cout << "Quiting" << endl;
