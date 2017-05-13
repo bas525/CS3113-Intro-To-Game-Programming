@@ -1,18 +1,6 @@
-﻿  LevelThree.cpp
-c:\users\brand\desktop\cs3113-intro-to-game-programming\final project\nyucodebase\levelthree.cpp(25): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\brand\desktop\cs3113-intro-to-game-programming\final project\nyucodebase\levelthree.cpp(35): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\brand\desktop\cs3113-intro-to-game-programming\final project\nyucodebase\levelthree.cpp(40): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\brand\desktop\cs3113-intro-to-game-programming\final project\nyucodebase\levelthree.cpp(51): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\brand\desktop\cs3113-intro-to-game-programming\final project\nyucodebase\levelthree.cpp(96): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\brand\desktop\cs3113-intro-to-game-programming\final project\nyucodebase\levelthree.cpp(105): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-c:\users\brand\desktop\cs3113-intro-to-game-programming\final project\nyucodebase\levelthree.cpp(122): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\brand\desktop\cs3113-intro-to-game-programming\final project\nyucodebase\levelthree.cpp(146): warning C4551: function call missing argument list
-  LevelOne.cpp
-c:\users\brand\desktop\cs3113-intro-to-game-programming\final project\nyucodebase\levelone.cpp(18): warning C4305: 'initializing': truncation from 'double' to 'float'
-c:\users\brand\desktop\cs3113-intro-to-game-programming\final project\nyucodebase\levelone.cpp(19): warning C4305: 'initializing': truncation from 'double' to 'float'
-c:\users\brand\desktop\cs3113-intro-to-game-programming\final project\nyucodebase\levelone.cpp(50): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\brand\desktop\cs3113-intro-to-game-programming\final project\nyucodebase\levelone.cpp(98): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\brand\desktop\cs3113-intro-to-game-programming\final project\nyucodebase\levelone.cpp(118): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
-  NYUCodebase.vcxproj -> C:\Users\brand\Desktop\CS3113-Intro-To-Game-Programming\Final Project\Debug\NYUCodebase.exe
-  NYUCodebase.vcxproj -> C:\Users\brand\Desktop\CS3113-Intro-To-Game-Programming\Final Project\Debug\NYUCodebase.pdb (Full PDB)
+﻿  WinScreen.cpp
+d:\cs3113\cs3113-intro-to-game-programming\final project\nyucodebase\winscreen.cpp(6): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\cs3113\cs3113-intro-to-game-programming\final project\nyucodebase\winscreen.cpp(7): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\cs3113\cs3113-intro-to-game-programming\final project\nyucodebase\winscreen.cpp(21): warning C4305: 'argument': truncation from 'double' to 'float'
+  NYUCodebase.vcxproj -> D:\CS3113\CS3113-Intro-To-Game-Programming\Final Project\Debug\NYUCodebase.exe
+  NYUCodebase.vcxproj -> D:\CS3113\CS3113-Intro-To-Game-Programming\Final Project\Debug\NYUCodebase.pdb (Full PDB)

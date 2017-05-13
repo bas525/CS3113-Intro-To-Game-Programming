@@ -26,6 +26,8 @@
 #include "LevelTwo.h"
 #include "LevelThree.h"
 #include "GameOverScreen.h"
+#include "WinScreen.h"
+#include <SDL_mixer.h>
 using namespace std;
 
 SDL_Window* displayWindow;
@@ -40,12 +42,22 @@ ShaderProgram *program;
 
 Player *player;
 
-
 float pi = 3.1415926;
 
-float redX = 0, redY = -1, redW = 1.5, redH = 1, redS = .5, redR = 45, redSp = 3,
-blueX = -2, blueY = 1, blueW = 3, blueH = .5, blueS = .3, blueR = -30, blueSp = 1,
-whiteX = 2, whiteY = 1, whiteW = 2, whiteH = .7, whiteS = .7, whiteR = 30, whiteSp = 1;
+
+Mix_Chunk *laserSound;
+Mix_Chunk *playerDieSound;
+Mix_Chunk *enemyDieSound;
+Mix_Chunk *reflectSound;
+Mix_Chunk *enemy2DeathSound;
+Mix_Chunk *swordSound;
+Mix_Chunk *playerLaserSound;
+Mix_Chunk *meteorDeathSound;
+Mix_Chunk *playerDeathSound;
+Mix_Chunk *enemy2LaserSound;
+Mix_Music *music;
+
+SheetSprite * backgroundSprite;
 
 GLuint LoadTexture(const char *filePath) {
 	int w, h, comp;
@@ -98,7 +110,10 @@ float playerX()
 }
 
 void playerLaserFire() {
-	player->fireLaser();
+	if (player->fireLaser()) {
+		Mix_PlayChannel(-1, playerLaserSound, 0);
+	}
+
 }
 
 std::vector<std::vector<Vect>> playerLaserCord()
@@ -124,6 +139,9 @@ void playerLaserBounce(int i) {
 }
 void playerSword()
 {
+	if (player->swordCanPlaySound()) {
+		Mix_PlayChannel(-1, swordSound, 0);
+	}
 	player->swordAttack();
 }
 
@@ -140,6 +158,8 @@ bool playerSwordActive()
 
 void resetPlayer() {
 	player->position = Vect(0, -3, 0);
+	player->resetAllLasers();
+	player->resetSword();
 }
 
 void setStateCollision() {
@@ -147,6 +167,7 @@ void setStateCollision() {
 }
 void setStateTitleScreen() {
 	state = STATE_TITLE_SCREEN;
+	TitleScreenInit();
 }
 void setStateLevelOne() {
 	state = LEVEL_ONE;
@@ -169,70 +190,54 @@ void setStateWin() {
 	state = WIN;
 }
 void setStateGameOver() {
+	Mix_PlayChannel(-1, playerDeathSound, 0);
 	state = GAME_OVER;
 }
 
-
-void Start(GLuint &redT, GLuint &blueT, GLuint &whiteT, Entity1 &red, Entity1 &blue, Entity1 &white) {
-
-
-	redT = LoadTexture(RESOURCE_FOLDER"red.png");
-	blueT = LoadTexture(RESOURCE_FOLDER"blue.png");
-	whiteT = LoadTexture(RESOURCE_FOLDER"white.png");
-
-	red = Entity1(redX, redY, redW, redH, redS, redR, redSp, redT);
-	blue = Entity1(blueX, blueY, blueW, blueH, blueS, blueR, blueSp, blueT);
-	white = Entity1(whiteX, whiteY, whiteW, whiteH, whiteS, whiteR, whiteSp, whiteT);
+void playReflect()
+{
+	Mix_PlayChannel(-1, reflectSound, 0);
 }
 
-void Draw(Entity1 &red, Entity1 &blue, Entity1 &white, ShaderProgram &program, Matrix &modelMatrix) {
-	blue.Draw(program, modelMatrix);
-	white.Draw(program, modelMatrix);
-	red.Draw(program, modelMatrix);
-	DrawText("test", 1, 0);
+void playEnemy3Death()
+{
+	Mix_PlayChannel(-1, meteorDeathSound, 0);
 }
 
-void Input(Entity1 &red, float elapsed) {
-	const Uint8 *keys = SDL_GetKeyboardState(NULL);
-	float x = 0, y = 0;
-	if (keys[SDL_SCANCODE_LEFT]) { x = -1; }
-	else if (keys[SDL_SCANCODE_RIGHT]) { x = 1; }
-	if (keys[SDL_SCANCODE_UP]) { y = 1; }
-	else if (keys[SDL_SCANCODE_DOWN]) { y = -1; }
-
-	red.Input(x, y, elapsed);
-	player->Input(x, y, elapsed);
+void playEnemy2Laser()
+{
+	Mix_PlayChannel(-1, enemy2LaserSound, 0);
 }
 
-void Update(Entity1 &red, Entity1 &blue, Entity1& white, GLuint texture) {
-	Vect penetration;
-	red.Update();
-	blue.Update();
-	white.Update();
-	if (checkSATCollision(red.globPoints(), blue.globPoints(), penetration)) {
-		red.collisionMove(penetration);
-		Vect opp;
-		opp.x = -penetration.x;
-		opp.y = -penetration.y;
-		blue.collisionMove(opp);
-		//red.collisionAction(blue.texture);
-	}
-	else if (checkSATCollision(red.globPoints(), white.globPoints(), penetration)) {
-		red.collisionAction(white.texture);
-	}
-	else {
-		red.collisionAction(texture);
-	}
-	if (checkSATCollision(player->globPoints(), blue.globPoints(), penetration)) {
-		cout << "works" << endl;
-	}
-	else cout << endl;
+void playEnemy2Death()
+{
+	Mix_PlayChannel(-1, enemy2DeathSound, 0);
+}
+
+void playEnemy1Laser()
+{
+	Mix_PlayChannel(-1, laserSound, 0);
+}
+
+void playEnemy1Death()
+{
+	Mix_PlayChannel(-1, enemyDieSound, 0);
 }
 
 void SetupGame() {
 	drawerInit();
 	state = STATE_TITLE_SCREEN;
+	Mix_PlayMusic(music, -1);
 }
+
+void drawBackground(ShaderProgram *program) {
+	backgroundSprite->drawSprite(program);
+}
+
+void scrollBackground(float speed, float elapsed) {
+	backgroundSprite->scroll(speed, elapsed);
+}
+
 
 int main(int argc, char *argv[]) {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -243,6 +248,19 @@ int main(int argc, char *argv[]) {
 #ifdef _WINDOWS
 	glewInit();
 #endif
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
+
+	music = Mix_LoadMUS("Background.mp3");
+	laserSound = Mix_LoadWAV("Laser.wav");
+	enemyDieSound = Mix_LoadWAV("enemyExplode.wav");
+	playerDieSound = Mix_LoadWAV("playerExplode.wav");
+	reflectSound = Mix_LoadWAV("reflect.wav");
+	swordSound = Mix_LoadWAV("swordSlash.wav");
+	playerLaserSound = Mix_LoadWAV("playerLaser.wav");
+	enemy2DeathSound = Mix_LoadWAV("enemy2Death.wav");
+	playerDeathSound = Mix_LoadWAV("playerDeath.wav");
+	meteorDeathSound = Mix_LoadWAV("meteorDestroy.wav");
+	enemy2LaserSound = Mix_LoadWAV("enemy2Laser.wav");
 
 	//glViewport(0, 0, 640, 360);
 	glViewport(0, 0, (int)gameWidth, (int)gameHeight);
@@ -259,14 +277,12 @@ int main(int argc, char *argv[]) {
 	//projectionMatrix.setOrthoProjection(-3.55, 3.55, -2.0f, 2.0f, -1.0f, 1.0f);
 	projectionMatrix.setOrthoProjection(-windowWidth / 2, windowWidth / 2, -(windowWidth*gameHeight) / (2 * gameWidth), (windowWidth*gameHeight) / (2 * gameWidth), -1.0f, 1.0f);
 
-
-
-	GLuint redTexture, blueTexture, whiteTexture;
-	Entity1 red, blue, white;
-	Start(redTexture, blueTexture, whiteTexture, red, blue, white);
-
 	GLuint spriteSheet = LoadTexture("spriteSheet.png");
 	player = new Player(&spriteSheet);
+
+	GLuint backgroundSheet = LoadTexture("background.png");
+	backgroundSprite = new SheetSprite(&backgroundSheet, 0.0f/ 1024.0f, 0.0f/1024.0f, 600.0f/ 1024.0f, 800.0f/ 1024.0f, 10.0f);
+
 
 	SetupGame();
 
@@ -294,12 +310,12 @@ int main(int argc, char *argv[]) {
 		program->setViewMatrix(viewMatrix);
 		program->setModelMatrix(modelMatrix);
 
-
+		drawBackground(program);
 		switch (state) {
 		case STATE_TITLE_SCREEN:
 			drawTitleScreen();
 			processTitleScreen();
-			updateTitleScreen();
+			updateTitleScreen(elapsed);
 			break;
 		case LEVEL_ONE:
 			drawLevelOne(program);
@@ -321,16 +337,18 @@ int main(int argc, char *argv[]) {
 			processGameOverScreen();
 			updateGameOverScreen();
 			break;
-		case COLLISION_ASSIGNMENT:
-			Draw(red, blue, white, *program, modelMatrix);
-			player->drawSprite(*program);
-			Input(red, elapsed);
-			Update(red, blue, white, redTexture);
+		case WIN:
+			drawWinScreen();
+			processWinScreen();
+			updateWinScreen(elapsed);
 			break;
 		}
 		SDL_GL_SwapWindow(displayWindow);
 	}
-
+	Mix_FreeMusic(music);
+	Mix_FreeChunk(laserSound);
+	Mix_FreeChunk(playerDieSound);
+	Mix_FreeChunk(enemyDieSound);
 	SDL_Quit();
 	return 0;
 }

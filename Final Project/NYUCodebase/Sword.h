@@ -27,8 +27,10 @@ public:
 	void turnOff();
 	void Update(float elapsed, Vect pos);
 	void updateMatrix();
+	bool canPlaySound();
 	std::vector<Vect> relPoints();
 	std::vector<Vect> globPoints();
+	void resetSword();
 	~Sword();
 };
 

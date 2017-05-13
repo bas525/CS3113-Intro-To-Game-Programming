@@ -62,6 +62,7 @@ void Laser::turnOff(Vect pos)
 {
 	position = pos;
 	active = false;
+	hurtUser = false;
 }
 
 void Laser::bounceBack() {
@@ -70,16 +71,26 @@ void Laser::bounceBack() {
 	rotation = 180;
 }
 
+void Laser::laserReset() {
+	direction = 1;
+	rotation = 0;
+	hurtUser = false;
+	active = false;
+	position = Vect(0, 0, 0);
+}
+
 void Laser::Update(float elapsed) {
 	if (active) {
 		position.y += elapsed*speed*direction;
 	}
 	if (position.y >= 4.1) {
+		hurtUser = false;
 		active = false;
 		direction = 1;
 		rotation = 0;
 	}
 	if (position.y <= -4.1) {
+		hurtUser = false;
 		active = false;
 		direction = 1;
 		rotation = 0;

@@ -12,6 +12,8 @@ bool nextOne;
 int curMeteor;
 float levelThreeTime;
 
+float levelThreeCooldown;
+
 float randomNum(float left, float right) {
 	float random = (float)(rand() % 1000);
 	random = random / 1000;
@@ -41,14 +43,16 @@ void initLevelThree()
 	}
 
 	meteor = *new Enemy3(startX, startY, 3, &spriteSheetThree);
+
+	levelThreeCooldown = 2;
 }
 
 
 
 void drawLevelThree(ShaderProgram *program)
 {
-	
-	DrawText("Space Striker", .8, -.4, -2.5, -3);
+	if (levelThreeCooldown > 0) DrawText("Level 3", .8, -.4, -1, 0);
+	//DrawText("Space Striker", .8, -.4, -2.5, -3);
 	if(meteors[curMeteor].active) meteors[curMeteor].drawSprite(*program);
 	meteor.drawSprite(*program);
 
@@ -58,10 +62,12 @@ void drawLevelThree(ShaderProgram *program)
 
 void processLevelThree(float elapsed)
 {
+	if (levelThreeCooldown > 0) return;
 	const Uint8 *keys = SDL_GetKeyboardState(NULL);
 	if (keys[SDL_SCANCODE_P]) {
 		setStateLevelThree();
 	}
+	if (keys[SDL_SCANCODE_R]) setStateTitleScreen();
 
 	float x = 0, y = 0;
 	if (keys[SDL_SCANCODE_LEFT]) { x = -1; }
@@ -114,6 +120,11 @@ float timeBasedY(float start, float cur, float end) {
 
 void updateLevelThree(float elapsed)
 {
+	if (levelThreeCooldown > 0) {
+		levelThreeCooldown -= elapsed;
+		return;
+	}
+	scrollBackground(.2, elapsed);
 	float direction = 1;
 	levelThreeTime += elapsed;
 	std::vector<std::vector<Vect>> laserCords = playerLaserCord();
@@ -143,12 +154,13 @@ void updateLevelThree(float elapsed)
 			setStateGameOver();
 		}
 	}
-	if (playerLaserActive) {
+	if (playerSwordActive() && meteors[curMeteor].active) {
 		if (checkSATCollision(playerSwordCord(), meteors[curMeteor].globPoints(), penetration)) {
 			meteors[curMeteor].active = false;
+			playEnemy3Death();
 		}
 	}
-	std::cout << std::endl;
+	//std::cout << std::endl;
 	updatePlayer(elapsed);
 	int counter = 1;
 	//float time = timeBasedY(startY, meteor.position.y, -3);
@@ -167,6 +179,6 @@ void updateLevelThree(float elapsed)
 
 
 	if (curMeteor == 10) {
-		setStateGameOver();
+		setStateWin();
 	}
 }

@@ -12,6 +12,8 @@ Player::Player() {
 	size = 0;
 	aspect = 0;
 	laserStock = 0;
+	laserCooldown = 0;
+	isLaserCooldown = false;
 }
 
 Player::Player(GLuint *spritep)
@@ -33,24 +35,32 @@ Player::Player(GLuint *spritep)
 	sprite = playerSprite;
 	aspect = width / height;
 
+	laserCooldown = 0;
+	isLaserCooldown = false;
+
 	laserStock = 100;
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 3; i++) {
 		lasers.push_back(Laser(spritep));
 	}
 	sword = *new Sword(spritep);
 }
 
-void Player::fireLaser()
-{
+bool Player::fireLaser()
+{	
+	if (isLaserCooldown) {
+		return false;
+	}
 	for (Laser &laser : lasers) {
 		//std::cout << "fire" << std::endl;
 		if (!laser.active) {
 			laser.turnOn(position);
-			break;
+			isLaserCooldown = true;
+			laserCooldown = .5;
+			return true;
 		}
 	}
 
-	
+	return false;
 }
 
 void Player::drawSprite(ShaderProgram & program)
@@ -110,13 +120,26 @@ std::vector<bool> Player::dangerousLasers()
 
 void Player::setLaserOff(int i)
 {
-
+	lasers[i].laserReset();
 	lasers[i].turnOff(position);
+	
 }
 
 void Player::laserBounce(int i)
 {
 	lasers[i].bounceBack();
+}
+
+void Player::resetAllLasers()
+{
+	for (Laser &laser : lasers) {
+		laser.laserReset();
+	}
+}
+
+void Player::resetSword()
+{
+	sword.resetSword();
 }
 
 void Player::swordAttack() {
@@ -131,6 +154,10 @@ bool Player::swordActive() {
 	return sword.active;
 }
 
+bool Player::swordCanPlaySound() {
+	return sword.canPlaySound();
+}
+
 void Player::updateMatrix() {
 	matrix.identity();
 	matrix.Translate(position.x, position.y, 0);
@@ -140,7 +167,11 @@ void Player::updateMatrix() {
 
 void Player::Input(float moveX, float moveY, float elapsed) {
 	position.x += moveX * speed * elapsed;
+	if (position.x < -3.55) position.x = -3.55;
+	if (position.x > 3.55) position.x = 3.55;
 	position.y += moveY * speed * elapsed;
+	if (position.y < -4) position.y = -4;
+	if (position.y > 4) position.y = 4;
 	updateMatrix();
 }
 
@@ -150,6 +181,12 @@ void Player::Update(float elapsed) {
 		laser.Update(elapsed);
 	}
 	sword.Update(elapsed, position);
+	if (isLaserCooldown) {
+		laserCooldown -= elapsed;
+		if (laserCooldown < 0) {
+			isLaserCooldown = false;
+		}
+	}
 }
 
 std::vector<Vect> Player::relPoints() {

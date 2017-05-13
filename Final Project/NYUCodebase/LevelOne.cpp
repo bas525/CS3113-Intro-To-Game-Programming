@@ -4,6 +4,8 @@ GLuint spriteSheetOne;
 std::vector<std::vector<Enemy>> enemies;
 std::vector<EnemyLaser1> enemyLasers;
 
+float levelOneCooldown;
+
 float enemyCountX = 6;
 float enemyCountY = 3;
 float levelOneTime;
@@ -41,13 +43,13 @@ void initLevelOne()
 			enemies.push_back(Enemy(i, j, &spriteSheetOne));
 		}
 	}*/
-
+	levelOneCooldown = 1;
 }
 
 void drawLevelOne(ShaderProgram *program)
 {
-	
-	DrawText("Space Striker", .8, -.4, -2.5, -3);
+	if (levelOneCooldown > 0) DrawText("Level 1", .8, -.4, -1, 0);
+	//DrawText("Space Striker", .8, -.4, -2.5, -3);
 	/*for (Enemy &enemy : enemies) {
 		enemy.drawSprite(*program);
 	}*/
@@ -70,10 +72,12 @@ void drawLevelOne(ShaderProgram *program)
 
 void processLevelOne(float elapsed)
 {
+	if (levelOneCooldown > 0) return;
 	const Uint8 *keys = SDL_GetKeyboardState(NULL);
 	if (keys[SDL_SCANCODE_P]) {
 		setStateLevelOne();
 	}
+	if (keys[SDL_SCANCODE_R]) setStateTitleScreen();
 
 	float x = 0, y = 0;
 	if (keys[SDL_SCANCODE_LEFT]) { x = -1; }
@@ -89,6 +93,11 @@ void processLevelOne(float elapsed)
 
 void updateLevelOne(float elapsed)
 {
+	if (levelOneCooldown > 0) {
+		levelOneCooldown -= elapsed;
+		return;
+	}
+	scrollBackground(.1, elapsed);
 	float direction = 1;
 	levelOneTime += elapsed;
 	std::vector<std::vector<Vect>> laserCords = playerLaserCord();
@@ -106,6 +115,7 @@ void updateLevelOne(float elapsed)
 						//std::cout << enemyLasers.size() << std::endl;
 						if (random == 0) {
 							enemyLaser.turnOn(enemies[i][j].position);
+							playEnemy1Laser();
 							break;
 						}
 					}
@@ -120,7 +130,7 @@ void updateLevelOne(float elapsed)
 						if (checkSATCollision(laserCords[k], enemies[i][j].globPoints(), penetration)) {
 							playerSetLaserOff(k);
 							enemies[i][j].Die();
-							
+							playEnemy1Death();
 						}
 					}
 				}
@@ -133,7 +143,7 @@ void updateLevelOne(float elapsed)
 			Vect penetration;
 			if (checkSATCollision(playerPoints(), enemyLaser.globPoints(), penetration)) {
 				setStateGameOver();
-				std::cout << "True" << std::endl;
+				//std::cout << "True" << std::endl;
 			}
 		}
 	}

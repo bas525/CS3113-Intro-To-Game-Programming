@@ -19,6 +19,10 @@ SheetSprite::SheetSprite()
 	height = 0;
 }
 
+void SheetSprite::scroll(float y, float elapsed) {
+	v -= y*elapsed;
+}
+
 void SheetSprite::drawSprite(ShaderProgram *program) {
 	glBindTexture(GL_TEXTURE_2D, *textureID);
 

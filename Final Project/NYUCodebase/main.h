@@ -37,3 +37,12 @@ void setStateLevelTwo();
 void setStateLevelThree();
 void setStateWin();
 void setStateGameOver();
+
+void playReflect();
+void playEnemy3Death();
+void playEnemy2Laser();
+void playEnemy2Death();
+void playEnemy1Laser();
+void playEnemy1Death();
+
+void scrollBackground(float speed, float elapsed);

@@ -98,6 +98,7 @@
     <ClCompile Include="TitleScreen.cpp" />
     <ClCompile Include="Vect.cpp" />
     <ClCompile Include="waste.cpp" />
+    <ClCompile Include="WinScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collision.h" />
@@ -124,6 +125,7 @@
     <ClInclude Include="TitleScreen.h" />
     <ClInclude Include="Vect.h" />
     <ClInclude Include="waste.h" />
+    <ClInclude Include="WinScreen.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment.glsl" />

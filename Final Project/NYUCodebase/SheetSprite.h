@@ -17,6 +17,7 @@ public:
 	
 
 	SheetSprite();
+	void scroll(float y, float elapsed);
 	~SheetSprite();
 };
 

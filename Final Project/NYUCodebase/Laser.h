@@ -44,6 +44,8 @@ public:
 
 	void bounceBack();
 
+	void laserReset();
+
 	void Update(float elapsed);
 
 	std::vector<Vect> relPoints();

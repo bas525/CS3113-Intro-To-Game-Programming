@@ -28,13 +28,15 @@ public:
 	float size;
 	float  aspect;
 
+	float laserCooldown;
+	bool isLaserCooldown;
 
 	int laserStock;
 
 	Player();
 	Player(GLuint *spritep);
 
-	void fireLaser();
+	bool fireLaser();
 
 	void drawSprite(ShaderProgram &program);
 
@@ -52,11 +54,17 @@ public:
 
 	void laserBounce(int i);
 
+	void resetAllLasers();
+
+	void resetSword();
+
 	void swordAttack();
 
 	std::vector<Vect> swordCord();
 
 	bool swordActive();
+
+	bool swordCanPlaySound();
 
 	void updateMatrix();
 

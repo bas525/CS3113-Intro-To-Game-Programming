@@ -45,7 +45,7 @@ void EnemyLaser2::damagedSelf() {
 void EnemyLaser2::Update(float elapsed) {
 	if (active) {
 		position.y += elapsed*speed*direction;
-		std::cout << position.y << std::endl;
+		//std::cout << position.y << std::endl;
 		if (position.y <= -4.1) {
 			active = false;
 		}
@@ -54,7 +54,7 @@ void EnemyLaser2::Update(float elapsed) {
 		}
 
 	}
-	std::cout << std::endl;
+	//std::cout << std::endl;
 
 }
 EnemyLaser2::~EnemyLaser2()

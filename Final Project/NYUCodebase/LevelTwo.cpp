@@ -4,6 +4,8 @@ GLuint spriteSheetTwo;
 std::vector<std::vector<Enemy2>> enemies2;
 std::vector<EnemyLaser2> enemyLasers2;
 
+float levelTwoCooldown;
+
 float enemyCountX2 = 4;
 float enemyCountY2 = 2;
 float levelTwoTime;
@@ -39,13 +41,13 @@ void initLevelTwo()
 	enemies2.push_back(Enemy2(i, j, &spriteSheetTwo));
 	}
 	}*/
-
+	levelTwoCooldown = 2;
 }
 
 void drawLevelTwo(ShaderProgram *program)
 {
-
-	DrawText("Space Striker", .8, -.4, -2.5, -3);
+	if (levelTwoCooldown > 0) DrawText("Level 2", .8, -.4, -1, 0);
+	//DrawText("Space Striker", .8, -.4, -2.5, -3);
 	/*for (Enemy2 &enemy : enemies2) {
 	enemy.drawSprite(*program);
 	}*/
@@ -68,10 +70,12 @@ void drawLevelTwo(ShaderProgram *program)
 
 void processLevelTwo(float elapsed)
 {
+	if (levelTwoCooldown > 0) return;
 	const Uint8 *keys = SDL_GetKeyboardState(NULL);
 	if (keys[SDL_SCANCODE_P]) {
 		setStateLevelTwo();
 	}
+	if (keys[SDL_SCANCODE_R]) setStateTitleScreen();
 
 	float x = 0, y = 0;
 	if (keys[SDL_SCANCODE_LEFT]) { x = -1; }
@@ -86,6 +90,11 @@ void processLevelTwo(float elapsed)
 
 void updateLevelTwo(float elapsed)
 {
+	if (levelTwoCooldown > 0) {
+		levelTwoCooldown -= elapsed;
+		return;
+	}
+	scrollBackground(.15, elapsed);
 	float direction = 1;
 	levelTwoTime += elapsed;
 	std::vector<std::vector<Vect>> laserCords = playerLaserCord();
@@ -108,6 +117,7 @@ void updateLevelTwo(float elapsed)
 						//std::cout << enemyLasers2.size() << std::endl;
 						if (random == 0) {
 							enemyLaser.turnOn(enemies2[i][j].position);
+							playEnemy2Laser();
 							break;
 						}
 					}
@@ -123,6 +133,7 @@ void updateLevelTwo(float elapsed)
 							//playerSetLaserOff(k);
 							//enemies2[i][j].Die();
 							playerLaserBounce(k);
+							playReflect();
 						}
 					}
 				}
@@ -132,6 +143,7 @@ void updateLevelTwo(float elapsed)
 						if (checkSATCollision(enemies2[i][j].globPoints(), enemyLaser.globPoints(), penetration)) {
 							enemies2[i][j].Die();
 							enemyLaser.damagedSelf();
+							playEnemy2Death();
 						}
 					}
 				}
@@ -149,6 +161,7 @@ void updateLevelTwo(float elapsed)
 			if (playerSwordActive()) {
 				if (checkSATCollision(playerSwordCord(), enemyLaser.globPoints(), penetration)) {
 					enemyLaser.bounceBack();
+					playReflect();
 				}
 			}
 		}
@@ -162,11 +175,13 @@ void updateLevelTwo(float elapsed)
 	}
 	for (int i = 0; i < dangerousLasers.size(); i++) {
 		if (laserActive[i] && dangerousLasers[i]) {
+			std::cout << dangerousLasers[i] << std::endl;
 			Vect penetration;
 			if (checkSATCollision(playerPoints(), laserCords[i], penetration)) {
 				setStateGameOver();
 			}
 		}
+		else std::cout << std::endl;
 	}
 	if (counter == 0) {
 		setStateLevelThree();

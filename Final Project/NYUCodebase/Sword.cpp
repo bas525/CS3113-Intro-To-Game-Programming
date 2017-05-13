@@ -76,6 +76,12 @@ void Sword::updateMatrix() {
 	matrix.Scale(scale.x, scale.y, 0);
 }
 
+bool Sword::canPlaySound() {
+	if (cooldown < 0) {
+		return true;
+	}
+	return false;
+}
 std::vector<Vect> Sword::relPoints() {
 	std::vector<Vect> points;
 	points.push_back(Vect(-.5*size*aspect, .5*size, 0));
@@ -92,6 +98,11 @@ std::vector<Vect> Sword::globPoints() {
 		v = matrix * v;
 	}
 	return points;
+}
+
+void Sword::resetSword() {
+	rotation = 0;
+	active = false;
 }
 
 Sword::~Sword()
